@@ -30,12 +30,15 @@ def main():
 
     current_commit_time = get_current_commit_time(repo)
     latest_commit_time = get_latest_commit_time(repo, 'main')
+    is_project_updated = current_commit_time == latest_commit_time
+
     now = datetime.now().strftime(time_format)
 
     data = tabulate([
         ['current_time', now],
         ['current_commit_time', current_commit_time],
-        ['latest_commit_time', latest_commit_time]
+        ['latest_commit_time', latest_commit_time],
+        ['is_project_updated', is_project_updated]
     ])
 
     with open(os.path.join(project_folder, 'test.txt'), 'w') as f:
