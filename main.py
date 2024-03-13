@@ -1,4 +1,6 @@
+import os
 from datetime import datetime
+from typing import Optional
 
 import git
 from tabulate import tabulate
@@ -6,9 +8,14 @@ from tabulate import tabulate
 time_format = '%d.%m.%Y %H:%M:%S'
 
 
-def get_latest_commit_time(repo_path) -> datetime or None:
-    repo = git.Repo(repo_path)
-    commits = list(repo.iter_commits('main', max_count=1))
+def get_current_commit_time(repo: git.Repo) -> str:
+    current_commit_hash = repo.head.object.hexsha
+    current_commit_time = repo.git.show('-s', '--format=%ci', current_commit_hash)
+    return datetime.strptime(current_commit_time, '%Y-%m-%d %H:%M:%S %z').strftime(time_format)
+
+
+def get_latest_commit_time(repo: git.Repo, branch: str) -> Optional[str]:
+    commits = list(repo.iter_commits(branch, max_count=1))
     if commits:
         commit = commits[0]
         return commit.committed_datetime.strftime(time_format)
@@ -17,11 +24,22 @@ def get_latest_commit_time(repo_path) -> datetime or None:
 
 
 def main():
-    latest_commit_time = get_latest_commit_time(r'D:\Work\test-repo')
+    project_folder = os.path.dirname(os.path.abspath(__file__))
+
+    repo = git.Repo(project_folder)
+
+    current_commit_time = get_current_commit_time(repo)
+    latest_commit_time = get_latest_commit_time(repo, 'main')
     now = datetime.now().strftime(time_format)
 
-    with open(r'D:\Work\test-repo\test.txt', 'w') as f:
-        f.write(tabulate([['current_time', now], ['latest_commit_time', latest_commit_time]]))
+    data = tabulate([
+        ['current_time', now],
+        ['current_commit_time', current_commit_time],
+        ['latest_commit_time', latest_commit_time]
+    ])
+
+    with open(os.path.join(project_folder, 'test.txt'), 'w') as f:
+        f.write(data)
 
 
 if __name__ == '__main__':
