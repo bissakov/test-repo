@@ -41,7 +41,8 @@ def main():
         ['is_project_updated', is_project_updated]
     ])
 
-    with open(os.path.join(project_folder, 'test.txt'), mode='w', encoding='utf-8') as f:
+    out_file = os.path.join(project_folder, 'test.txt')
+    with open(out_file, mode='w', encoding='utf-8') as f:
         f.write(data)
 
 
