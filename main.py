@@ -42,8 +42,8 @@ def main():
     ])
 
     out_file_path = os.path.join(project_folder, 'test.txt')
-    with open(out_file_path, mode='w', encoding='utf-8') as f:
-        f.write(data)
+    with open(out_file_path, mode='w', encoding='utf-8') as out_file:
+        out_file.write(data)
 
 
 if __name__ == '__main__':
