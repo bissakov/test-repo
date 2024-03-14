@@ -24,6 +24,10 @@ def get_latest_commit_time(repo: git.Repo, branch: str) -> Optional[str]:
 
 
 def main():
+
+  
+
+    
     project_folder = os.path.dirname(os.path.abspath(__file__))
 
     repo = git.Repo(project_folder)
